@@ -13,14 +13,14 @@ void addEdge(vector<int> adj[], int u, int v)
 } 
   
 
-void makeMatrix(vector<int> dj , int N){
+void makeMatrix(vector<int> dj[], int N){
   int listLength = N*N;
   for(int i = 0; i < listLength;++i){
       if(i+1 < listLength){
-        addEdge(&dj,i,i+1);
+        addEdge(dj,i,i+1);
       }
       if(i+N <listLength){
-        addEdge(&dj,i,i+N);
+        addEdge(dj,i,i+N);
       }
     }
 
@@ -66,6 +66,26 @@ void openFile(string fileName, int elements[]){
   }
 }
 
+void changeColor(vector<int> dj[], int elements[],int N,int color){
+  
+  bool flag = true;
+  int count = 0;
+  while (flag == true){
+    flag = false;
+    //int adjac[dj[count].size()];
+    //int i = 0;
+    for(auto x: dj[count]){
+      //adjac[i] = x;
+      //i++;
+      if(elements[x] == elements[count]){
+        elements[x] = color;
+        flag = true;
+      }      
+    }
+  }
+  elements[0] = color;
+}
+
 
 
 int main() { 
@@ -86,88 +106,24 @@ int main() {
   }
   /*   Making graph       */
   int listLength = rows*rows;
-  vector<int> matr[rows*rows];
+  vector<int> matr[listLength];
   makeMatrix(matr,rows);
-  adjacent(matr);
+
+  adjacent(matr,listLength);
+  printGraph(elementList,listLength,rows);
 
 
 
-  /*
-
-
-  // N x N 
-  int N = data;
-  int length = N*N;
-  int elements[length];
-  cout << data << endl;
-  cout <<"START OF LOOP \n";
-  // Gets all the int's inside the txt
-  for(int i = 0; i < length;++i){
-    ufile >> data; 
-    elements[i] = data;
-    cout << data << endl; 
-
-  }
-  
-  if (file.is_open()) {
-    std::string line;
-    while (getline(file, line)) {
-        // using printf() in all tests for consistency
-        printf("%s \n", line.c_str());
-    }
-  
-    file.close();
-  }
-  
-  ufile.close();
-  */
-  /*
-  int V = 9; 
-    vector<int> adj[V]; 
-    addEdge(adj, 0, 1); 
-    addEdge(adj, 0, 3); 
-    addEdge(adj, 1, 2); 
-    addEdge(adj, 1, 4); 
-    addEdge(adj, 2, 5); 
-    addEdge(adj, 3, 4); 
-    addEdge(adj, 3, 6); 
-    addEdge(adj, 4, 5); 
-    addEdge(adj, 4, 7);
-    addEdge(adj, 5, 8);
-    addEdge(adj, 6, 7);
-    addEdge(adj, 7, 8);
-    adjacent(adj, V); 
-    // have a list of all the values in correct index 
-  */
-
-  /*
-    cout << "START OF ELEMENTS \n";
-    for(int i = 0; i < length;i++){
-      cout << elements[i] << endl; 
+  for(auto x: matr[0]){
+    cout << x << endl;
   }
 
-    cout << "starts of DJ \n";
-    vector<int> dj[length];
+  cout << "Lenght of matr[0] = " << matr[0].size() << endl;
 
-    // Makes the graph
-    for(int i = 0; i < length;++i){
-      if(i+1 < length){
-        addEdge(dj,i,i+1);
-      }
-      if(i+N <length){
-        addEdge(dj,i,i+N);
-      }
-    }
-    // Print all adjacencies.
-    adjacent(dj,length);
-
-    // Print the graph 
-    printGraph(elements,length,N);
-   
-   */
-
-
-
+  int cc = 2;
+  changeColor(matr,elementList,rows,cc);
+  printGraph(elementList,listLength,rows);
+  
 
 
 
