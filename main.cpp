@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include<bits/stdc++.h> 
+#include <list>
 
 using namespace std;
 
@@ -67,22 +68,50 @@ void openFile(string fileName, int elements[]){
 }
 
 void changeColor(vector<int> dj[], int elements[],int N,int color){
-  
+  // first element is count rest are potential elements
   bool flag = true;
-  int count = 0;
+  int cur[N*N];
+  cur[0] = 0;
+  cur[1] = 0;
+  int count;
+  int adjac[4];
+  int loopLength = cur[0];
+
   while (flag == true){
     flag = false;
-    //int adjac[dj[count].size()];
-    //int i = 0;
-    for(auto x: dj[count]){
-      //adjac[i] = x;
-      //i++;
-      if(elements[x] == elements[count]){
-        elements[x] = color;
-        flag = true;
-      }      
+    int loopLength = cur[0]; // length of current
+    // adjacent nodes
+    cout << " Current cur length : " << loopLength << endl;///D
+    for(int i = 0; i < loopLength -1;i++){
+      cout << " Size of adjacent " << dj[cur[i+1]].size() << endl;
+      int adjac[dj[cur[i+1]].size()]; // size of adjacent elements
+      int adjLength = sizeof(adjac)/sizeof(adjac[0]); //D
+      cout << " Current adj length : " << adjLength << endl; //D
+      count = 0;
+      for(auto x:dj[cur[i+1]]){ // for each adjacent element
+        cout << " Current adjacent vector : " << x << endl; //D
+        cout << " Elements[x]: " << elements[x] << 
+        " And elements[cur[i]] "<< elements[cur[i+1]]  <<endl; //D
+        if(elements[x] == elements[cur[i+1]] && x > cur[i+1]){ // if same as current
+          cout << " Count = " << count << endl;
+          elements[x] = color; 
+          flag = true;
+          adjac[count] = x;
+          cout << " Element count in adjac : " << adjac[count] << endl; 
+          count++;
+        } 
+        cout << " 1Count = " << count << endl; 
+      }
+      cout << " This is i =" << i << endl;
+      cout << " 2Count = " << count << endl; 
     }
-  }
+    cur[0] = count;
+    cout << " 3Count = " << count << endl; 
+    for(int i = 0; i < cur[0] ; i++){
+      cur[i+1] = adjac[i];
+    }
+
+  }    
   elements[0] = color;
 }
 
@@ -101,31 +130,30 @@ int main() {
   string fileNam = "example.txt";
   // returns list of elements
   openFile(fileNam,elementList);
-  for(int i = 0; i < rows*rows;++i){
-    cout << elementList[i] << endl; 
-  }
   /*   Making graph       */
   int listLength = rows*rows;
   vector<int> matr[listLength];
   makeMatrix(matr,rows);
 
-  adjacent(matr,listLength);
+  //adjacent(matr,listLength);
   printGraph(elementList,listLength,rows);
 
 
-
+  /*
   for(auto x: matr[0]){
     cout << x << endl;
-  }
+  } */
 
-  cout << "Lenght of matr[0] = " << matr[0].size() << endl;
-
+  ///cout << "Lenght of matr[0] = " << matr[0].size() << endl;
+  /*    change color
+             */
+  cout << "Start of chnage color " << endl;
   int cc = 2;
   changeColor(matr,elementList,rows,cc);
   printGraph(elementList,listLength,rows);
+
   
-
-
+  
 
 
     return 0; 
