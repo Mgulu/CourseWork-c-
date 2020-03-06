@@ -13,12 +13,16 @@ void addEdge(vector<int> adj[], int u, int v)
 } 
   
 
-void matrix(vector<int> graphM , int values[],int n){
-  /*
-  for(int i =0;i<n;i++){
-    matrix[row][]
-  }
-  */
+void makeMatrix(vector<int> dj , int N){
+  int listLength = N*N;
+  for(int i = 0; i < listLength;++i){
+      if(i+1 < listLength){
+        addEdge(&dj,i,i+1);
+      }
+      if(i+N <listLength){
+        addEdge(&dj,i,i+N);
+      }
+    }
 
 }
 // A utility function to print the adjacency list 
@@ -45,14 +49,52 @@ void printGraph(int elementsList[],int lengthList,int rows){
     }
 }
 
+void openFile(string fileName, int elements[]){
+  ifstream ufile("example.txt");
+  int data;
+  // gets first element of list
+  ufile >> data; 
+  // N x N 
+  int N = data;
+  
+  cout << data << endl;
+  cout <<"START OF LOOP \n";
+  // Gets all the int's inside the txt
+  for(int i = 0; i < N*N;++i){
+    ufile >> data; 
+    elements[i] = data;
+  }
+}
+
 
 
 int main() { 
+  /*  Making list of elements     */
   //opens file
   ifstream ufile("example.txt");
   int data;
   // gets first element of list
   ufile >> data; 
+  int rows = data;
+  ufile.close();
+  int elementList[rows*rows];
+  string fileNam = "example.txt";
+  // returns list of elements
+  openFile(fileNam,elementList);
+  for(int i = 0; i < rows*rows;++i){
+    cout << elementList[i] << endl; 
+  }
+  /*   Making graph       */
+  int listLength = rows*rows;
+  vector<int> matr[rows*rows];
+  makeMatrix(matr,rows);
+  adjacent(matr);
+
+
+
+  /*
+
+
   // N x N 
   int N = data;
   int length = N*N;
@@ -66,7 +108,7 @@ int main() {
     cout << data << endl; 
 
   }
-  /*
+  
   if (file.is_open()) {
     std::string line;
     while (getline(file, line)) {
@@ -76,8 +118,9 @@ int main() {
   
     file.close();
   }
-  */
+  
   ufile.close();
+  */
   /*
   int V = 9; 
     vector<int> adj[V]; 
@@ -97,6 +140,7 @@ int main() {
     // have a list of all the values in correct index 
   */
 
+  /*
     cout << "START OF ELEMENTS \n";
     for(int i = 0; i < length;i++){
       cout << elements[i] << endl; 
@@ -120,7 +164,7 @@ int main() {
     // Print the graph 
     printGraph(elements,length,N);
    
-   
+   */
 
 
 
