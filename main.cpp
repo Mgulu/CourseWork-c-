@@ -16,21 +16,21 @@ void addEdge(vector<int> adj[], int u, int v)
 
 void makeMatrix(vector<int> dj[], int N){
   int listLength = N*N;
-  for(int i = 0; i < listLength;++i){
-      if(i+1 < listLength){
-        addEdge(dj,i,i+1);
-      }
+  for(int i = 0; i < listLength ;i++){
       if(i+N <listLength){
-        addEdge(dj,i,i+N);
-      }
+          addEdge(dj,i,i+N);
+        }
+      if((i+1) % N == 0) continue;
+      if(i+1 < listLength){
+        addEdge(dj,i,i+1);      
     }
-
+  }
 }
 // A utility function to print the adjacency list 
 // representation of graph 
 void adjacent(vector<int> adj[], int V) 
 { 
-    for (int v = 0; v < V; ++v) 
+    for (int v = 0; v < V; v++) 
     { 
         cout << "\n Adjacency list of vertex "
              << v << "\n head "; 
@@ -61,7 +61,7 @@ void openFile(string fileName, int elements[]){
   cout << data << endl;
   cout <<"START OF LOOP \n";
   // Gets all the int's inside the txt
-  for(int i = 0; i < N*N;++i){
+  for(int i = 0; i < N*N;i++){
     ufile >> data; 
     elements[i] = data;
   }
@@ -88,11 +88,13 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
     for(int i = 0; i < loopLength;i++){
       cout << " Current value = " << cur[i+1] << endl;
       int adjLength = dj[cur[i+1]].size();
+      
       adjac[0] = adjLength;
       cout << " Numve of adj elements : " << adjLength << endl; //D
       count = 0;
       for(auto x:dj[cur[i+1]]){ // for each adjacent element
         cout << " Current adjacent vector : " << x << endl; //D
+        cout << " ////elementsCh[changeC] value is " << elementsCh[changeC-1] << endl;
         cout << " Elements[x]: " << elements[x] << 
         " And elements[cur[i]] "<< elements[cur[i+1]]  <<endl; //D
         if(elements[x] == elements[cur[i+1]] && x > cur[i+1]){ // if same as current
@@ -135,6 +137,7 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
 
 
   for(int i = 0; i < elementsCh[0];i++){
+    cout << " Value being changed :" << elementsCh[i+1] << endl;
     elements[elementsCh[i+1]] = color;
   }
   
@@ -159,9 +162,11 @@ int main() {
   /*   Making graph       */
   int listLength = rows*rows;
   vector<int> matr[listLength];
+
   makeMatrix(matr,rows);
 
   adjacent(matr,listLength);
+
   printGraph(elementList,listLength,rows);
 
 
@@ -176,21 +181,25 @@ int main() {
   cout << "Start of chnage color " << endl;
 
   
+  
   changeColor(matr,elementList,rows,1);
   printGraph(elementList,listLength,rows);
 
   changeColor(matr,elementList,rows,6);
   printGraph(elementList,listLength,rows);
 
-  changeColor(matr,elementList,rows,2);
+  changeColor(matr,elementList,rows,5);
   printGraph(elementList,listLength,rows);
 
   changeColor(matr,elementList,rows,3);
   printGraph(elementList,listLength,rows);
 
-  changeColor(matr,elementList,rows,2);
+  changeColor(matr,elementList,rows,5);
   printGraph(elementList,listLength,rows);
 
+  changeColor(matr,elementList,rows,2);
+  printGraph(elementList,listLength,rows);
+  
 
 
   
