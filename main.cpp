@@ -13,6 +13,20 @@ void addEdge(vector<int> adj[], int u, int v)
     adj[v].push_back(u); 
 } 
   
+/*
+void makeMatrix(vector<int> dj[], int N){
+  int listLength = N*N;
+  for(int i = 0; i < listLength ;i++){
+      if(i+N <listLength){
+          addEdge(dj,i,i+N);
+        }
+      if((i+1) % N == 0) continue;
+      if(i+1 < listLength){
+        addEdge(dj,i,i+1);      
+    }
+  }
+}
+*/
 
 void makeMatrix(vector<int> dj[], int N){
   int listLength = N*N;
@@ -37,7 +51,6 @@ void adjacent(vector<int> adj[], int V)
         // auto automatically gets the type of 
         for (auto x : adj[v]) 
            cout << "-> " << x; 
-        printf("\n"); 
     } 
 } 
 
@@ -70,14 +83,14 @@ void openFile(string fileName, int elements[]){
 void changeColor(vector<int> dj[], int elements[],int N,int color){
   // first element is count rest are potential elements
   bool flag = true;
-  int cur[N*N];
+  int cur[N*N+50];
   cur[0] = 1;
   cur[1] = 0;
   int count;
   int changeC = 1;
-  int elementsCh[N*N];
+  int elementsCh[N*N+50];
   elementsCh[0] = 0;
-  int adjac[N*N];
+  int adjac[N*N+50];
   int loopLength = cur[0];
   while (flag == true){
     flag = false;
@@ -97,7 +110,7 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
         cout << " ////elementsCh[changeC] value is " << elementsCh[changeC-1] << endl;
         cout << " Elements[x]: " << elements[x] << 
         " And elements[cur[i]] "<< elements[cur[i+1]]  <<endl; //D
-        if(elements[x] == elements[cur[i+1]] && x > cur[i+1]){ // if same as current
+        if(elements[x] == elements[cur[i+1]] && x > cur[i+1] && elementsCh[changeC-1] != x ){ // if same as current
           cout << ">>>> change C value before " << elementsCh[0] <<
           endl;
           elementsCh[0] = changeC;
@@ -119,11 +132,10 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
     }
     
 
-    int adjLength = sizeof(adjac)/sizeof(adjac[0]); //D
-    cout << " Current adj length : " << adjLength << endl; //D
     cur[0] = count;
     cout << " 3Count = " << count << endl; 
     cout << "THIS length of elementsCh[0] "<< elementsCh[0] << endl;
+    cout << "Amount of adjacent Vectors "<< cur[0] << endl;
     for(int i = 0; i < cur[0] ; i++){
       cur[i+1] = adjac[i +1] ;
       cout << " This is cur = " << cur[i+1] << " This is adjac "
@@ -131,11 +143,6 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
     }
 
   }
-
-  
-
-
-
   for(int i = 0; i < elementsCh[0];i++){
     cout << " Value being changed :" << elementsCh[i+1] << endl;
     elements[elementsCh[i+1]] = color;
@@ -147,7 +154,7 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
 
 
 int main() { 
-  string fileNam = "four.txt";
+  string fileNam = "test.txt";
   /*  Making list of elements     */
   //opens file
   ifstream ufile(fileNam);
@@ -166,6 +173,7 @@ int main() {
   makeMatrix(matr,rows);
 
   adjacent(matr,listLength);
+  cout << endl;
 
   printGraph(elementList,listLength,rows);
 
@@ -185,20 +193,28 @@ int main() {
   changeColor(matr,elementList,rows,1);
   printGraph(elementList,listLength,rows);
 
-  changeColor(matr,elementList,rows,6);
+  changeColor(matr,elementList,rows,2);
   printGraph(elementList,listLength,rows);
 
-  changeColor(matr,elementList,rows,5);
-  printGraph(elementList,listLength,rows);
-
-  changeColor(matr,elementList,rows,3);
-  printGraph(elementList,listLength,rows);
-
-  changeColor(matr,elementList,rows,5);
+  changeColor(matr,elementList,rows,1);
   printGraph(elementList,listLength,rows);
 
   changeColor(matr,elementList,rows,2);
   printGraph(elementList,listLength,rows);
+
+  changeColor(matr,elementList,rows,1);
+  printGraph(elementList,listLength,rows);
+
+  changeColor(matr,elementList,rows,2);
+  printGraph(elementList,listLength,rows);
+
+  changeColor(matr,elementList,rows,1);
+  printGraph(elementList,listLength,rows);
+
+  changeColor(matr,elementList,rows,2);
+  printGraph(elementList,listLength,rows);
+
+  
   
 
 
