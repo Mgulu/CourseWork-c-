@@ -51,7 +51,7 @@ void printGraph(int elementsList[],int lengthList,int rows){
 }
 
 void openFile(string fileName, int elements[]){
-  ifstream ufile("example.txt");
+  ifstream ufile(fileName);
   int data;
   // gets first element of list
   ufile >> data; 
@@ -71,63 +71,89 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
   // first element is count rest are potential elements
   bool flag = true;
   int cur[N*N];
-  cur[0] = 0;
+  cur[0] = 1;
   cur[1] = 0;
   int count;
-  int adjac[4];
+  int changeC = 1;
+  int elementsCh[N*N];
+  elementsCh[0] = 0;
+  int adjac[N*N];
   int loopLength = cur[0];
-
   while (flag == true){
     flag = false;
     int loopLength = cur[0]; // length of current
     // adjacent nodes
-    cout << " Current cur length : " << loopLength << endl;///D
-    for(int i = 0; i < loopLength -1;i++){
-      cout << " Size of adjacent " << dj[cur[i+1]].size() << endl;
-      int adjac[dj[cur[i+1]].size()]; // size of adjacent elements
-      int adjLength = sizeof(adjac)/sizeof(adjac[0]); //D
-      cout << " Current adj length : " << adjLength << endl; //D
+    cout << " THIS IS START \n \n";
+    cout << " Current length of cur  : " << loopLength << endl;///D
+    for(int i = 0; i < loopLength;i++){
+      cout << " Current value = " << cur[i+1] << endl;
+      int adjLength = dj[cur[i+1]].size();
+      adjac[0] = adjLength;
+      cout << " Numve of adj elements : " << adjLength << endl; //D
       count = 0;
       for(auto x:dj[cur[i+1]]){ // for each adjacent element
         cout << " Current adjacent vector : " << x << endl; //D
         cout << " Elements[x]: " << elements[x] << 
         " And elements[cur[i]] "<< elements[cur[i+1]]  <<endl; //D
         if(elements[x] == elements[cur[i+1]] && x > cur[i+1]){ // if same as current
+          cout << ">>>> change C value before " << elementsCh[0] <<
+          endl;
+          elementsCh[0] = changeC;
+          elementsCh[changeC] = x;
+          changeC++;
+          cout << "***** Value of current in If statement " << x <<
+          endl;
+          cout << " ////elementsCh[changeC] value is " << elementsCh[changeC-1] << endl;
           cout << " Count = " << count << endl;
-          elements[x] = color; 
+          //elements[x] = color; 
           flag = true;
-          adjac[count] = x;
-          cout << " Element count in adjac : " << adjac[count] << endl; 
+          adjac[count + 1] = x;
+          cout << " Value at adjac[count] : " << adjac[count + 1] << endl;
           count++;
         } 
-        cout << " 1Count = " << count << endl; 
+        
       }
-      cout << " This is i =" << i << endl;
-      cout << " 2Count = " << count << endl; 
+      
     }
+    
+
+    int adjLength = sizeof(adjac)/sizeof(adjac[0]); //D
+    cout << " Current adj length : " << adjLength << endl; //D
     cur[0] = count;
     cout << " 3Count = " << count << endl; 
+    cout << "THIS length of elementsCh[0] "<< elementsCh[0] << endl;
     for(int i = 0; i < cur[0] ; i++){
-      cur[i+1] = adjac[i];
+      cur[i+1] = adjac[i +1] ;
+      cout << " This is cur = " << cur[i+1] << " This is adjac "
+      << adjac[i + 1] << endl;
     }
 
-  }    
+  }
+
+  
+
+
+
+  for(int i = 0; i < elementsCh[0];i++){
+    elements[elementsCh[i+1]] = color;
+  }
+  
   elements[0] = color;
 }
 
 
 
 int main() { 
+  string fileNam = "four.txt";
   /*  Making list of elements     */
   //opens file
-  ifstream ufile("example.txt");
+  ifstream ufile(fileNam);
   int data;
   // gets first element of list
   ufile >> data; 
   int rows = data;
   ufile.close();
   int elementList[rows*rows];
-  string fileNam = "example.txt";
   // returns list of elements
   openFile(fileNam,elementList);
   /*   Making graph       */
@@ -135,7 +161,7 @@ int main() {
   vector<int> matr[listLength];
   makeMatrix(matr,rows);
 
-  //adjacent(matr,listLength);
+  adjacent(matr,listLength);
   printGraph(elementList,listLength,rows);
 
 
@@ -148,22 +174,26 @@ int main() {
   /*    change color
              */
   cout << "Start of chnage color " << endl;
-  int cc = 2;
-  changeColor(matr,elementList,rows,cc);
+
+  
+  changeColor(matr,elementList,rows,1);
   printGraph(elementList,listLength,rows);
 
-  
-  
+  changeColor(matr,elementList,rows,6);
+  printGraph(elementList,listLength,rows);
 
+  changeColor(matr,elementList,rows,2);
+  printGraph(elementList,listLength,rows);
+
+  changeColor(matr,elementList,rows,3);
+  printGraph(elementList,listLength,rows);
+
+  changeColor(matr,elementList,rows,2);
+  printGraph(elementList,listLength,rows);
+
+
+
+  
 
     return 0; 
-
-
-    
-
-    
-
-
-
-
 }
