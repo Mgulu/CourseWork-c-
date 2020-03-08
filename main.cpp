@@ -8,8 +8,10 @@ using namespace std;
 
 // node and next node
 void addEdge(vector<int> adj[], int u, int v) 
-{ 
+{   
+    // Adds to the list in index U
     adj[u].push_back(v); 
+    // Adds to the list in index v
     adj[v].push_back(u); 
 } 
   
@@ -80,17 +82,58 @@ void openFile(string fileName, int elements[]){
   }
 }
 
+
+
+
+vector<int> adj(int cur,vector<int> elChange,vector<int> dj[],int elements[],int color){
+   for(auto x:dj[cur]){
+     // Checks to see if the value exists inside elChange
+     bool contained = false;
+     if(std::find(elChange.begin(), elChange.end(), x) != elChange.end()) {
+      contained = true;
+      }
+     cout << " Current x :" << x << " Value is "
+     << elements[x]  << " Current in DJ :" << cur << endl;
+     if(elements[x] != elements[cur]){
+       cout << " THIS IS inCORRECT x :" << x << endl;
+       elChange.push_back(cur);       
+     } else if(elements[x] == elements[cur] && x > cur /*&& elements[x] == color*/){
+       cout << " //////THIS IS correct x :" << x << endl;
+       elChange.push_back(x); 
+       elChange = adj(x,elChange,dj,elements,color);      
+     } else if (elements[x] == elements[cur] && x < cur && contained == false){
+       cout << " //////THIS IS correct x :" << x << endl;
+       elChange.push_back(x); 
+       elChange = adj(x,elChange,dj,elements,color);  
+     }
+   }
+   return elChange ;
+}
+
+void changeColor(vector<int> dj[], int elements[],int color){
+  vector<int> elementsToChange;
+  int prevColor = elements[0];
+  elementsToChange = adj(0,elementsToChange,dj,elements,prevColor);
+  for (int i =0 ; i < elementsToChange.size();i++){
+    cout << " THIS IS " <<elementsToChange[i] << endl;
+    elements[elementsToChange[i]] = color ;
+  }  
+  elements[0] = color;
+}
+
+
+/*
 void changeColor(vector<int> dj[], int elements[],int N,int color){
   // first element is count rest are potential elements
   bool flag = true;
-  int cur[N*N+50];
+  int cur[N*N];
   cur[0] = 1;
   cur[1] = 0;
   int count;
   int changeC = 1;
-  int elementsCh[N*N+50];
+  int elementsCh[N*N];
   elementsCh[0] = 0;
-  int adjac[N*N+50];
+  int adjac[N*N];
   int loopLength = cur[0];
   while (flag == true){
     flag = false;
@@ -125,12 +168,10 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
           adjac[count + 1] = x;
           cout << " Value at adjac[count] : " << adjac[count + 1] << endl;
           count++;
-        } 
+        }
         
-      }
-      
-    }
-    
+      }      
+    }    
 
     cur[0] = count;
     cout << " 3Count = " << count << endl; 
@@ -150,7 +191,7 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
   
   elements[0] = color;
 }
-
+*/
 
 
 int main() { 
@@ -177,6 +218,8 @@ int main() {
 
   printGraph(elementList,listLength,rows);
 
+  
+
 
   /*
   for(auto x: matr[0]){
@@ -188,36 +231,45 @@ int main() {
              */
   cout << "Start of chnage color " << endl;
 
-  
-  
-  changeColor(matr,elementList,rows,1);
-  printGraph(elementList,listLength,rows);
-
+  /*
+  cout << "Start of new change color" << endl;
   changeColor(matr,elementList,rows,2);
   printGraph(elementList,listLength,rows);
 
+  cout << "Start of new change color" << endl;
   changeColor(matr,elementList,rows,1);
   printGraph(elementList,listLength,rows);
 
+  cout << "Start of new change color" << endl;
   changeColor(matr,elementList,rows,2);
   printGraph(elementList,listLength,rows);
+  */
 
-  changeColor(matr,elementList,rows,1);
+  /*
+  vector<int> elChange;
+
+  elChange = adj(0,elChange,matr,elementList);
+
+  cout << "THIS IS :"<< elChange.size() << " Size "<< endl;
+  cout << "THIS IS :"<< elChange[0] << endl;
+  cout << "THIS IS :"<< elChange[1] << endl;
+  cout << "THIS IS :"<< elChange[2] << endl;
+  cout << "THIS IS :"<< elChange[3] << endl;
+  cout << "THIS IS :"<< elChange[4] << endl;
+  cout << "THIS IS :"<< elChange[5] << endl;
+
+  for (int i = 0; i << 5; i++){
+    cout << "Value : " << elChange[i] << endl;
+  }
+  */
+
+  printGraph(elementList,listLength,rows);
+  cout << endl;
+  changeColor(matr, elementList,4);
   printGraph(elementList,listLength,rows);
 
-  changeColor(matr,elementList,rows,2);
+  changeColor(matr, elementList,2);
   printGraph(elementList,listLength,rows);
-
-  changeColor(matr,elementList,rows,1);
-  printGraph(elementList,listLength,rows);
-
-  changeColor(matr,elementList,rows,2);
-  printGraph(elementList,listLength,rows);
-
-  
-  
-
-
   
 
     return 0; 
