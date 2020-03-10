@@ -87,6 +87,14 @@ void openFile(string fileName, int elements[]){
 }
 
 
+int vContains(int num , vector<int> numbers){
+  if (std::find(numbers.begin(), numbers.end(), num) != numbers.end())
+    // Contains
+		return 1;
+	else
+    // Dosent contain
+		return 0;
+}
 
 
 vector<int> adj(int cur,vector<int> elChange,vector<int> dj[],int elements[],int color){
@@ -96,17 +104,17 @@ vector<int> adj(int cur,vector<int> elChange,vector<int> dj[],int elements[],int
      if(std::find(elChange.begin(), elChange.end(), x) != elChange.end()) {
       contained = true;
       }
-     cout << " Current x :" << x << " Value is "
-     << elements[x]  << " Current in DJ :" << cur << endl;
+     //cout << " Current x :" << x << " Value is "
+     //<< elements[x]  << " Current in DJ :" << cur << endl;
      if(elements[x] != elements[cur]){
-       cout << " THIS IS inCORRECT x :" << x << endl;
+       //cout << " THIS IS inCORRECT x :" << x << endl;
        elChange.push_back(cur);       
      } else if(elements[x] == elements[cur] && x > cur && contained == false){
-       cout << " //////THIS IS correct x :" << x << endl;
+       //cout << " //////THIS IS correct x :" << x << endl;
        elChange.push_back(x); 
        elChange = adj(x,elChange,dj,elements,color);      
      } else if (elements[x] == elements[cur] && x < cur && contained == false){
-       cout << " //////THIS IS correct x :" << x << endl;
+       //cout << " //////THIS IS correct x :" << x << endl;
        elChange.push_back(x); 
        elChange = adj(x,elChange,dj,elements,color);  
      }
@@ -128,21 +136,11 @@ int hValue(int elements[],vector<int> dj[],int adj){
     for(auto x:dj[adj]){      
       if(elements[x] == elements[adj]){        
         counter -=1;
-      } else if(elements[x]!= elements[adj]){
-  
+      } else if(elements[x]!= elements[adj]){  
         counter +=1;
       }
     }
     return counter;
-}
-
-int vContains(int num , vector<int> numbers){
-  if (std::find(numbers.begin(), numbers.end(), num) != numbers.end())
-    // Contains
-		return 1;
-	else
-    // Dosent contain
-		return 0;
 }
 
 
@@ -151,39 +149,59 @@ void pathFind(vector<int> dj[],int elements[]){
   vector<int> closedSet;
   vector<int> path;
   openSet.push_back(0);
+  int previousFcost = 1000;
   while (openSet.size() > 0){
      //cout << "First element in openSet " << openSet[0] << endl;
     int currentNode = openSet[0];
-    //cout << " This is current Node :" << currentNode << endl;
+    cout << " This is current Node :" << currentNode << endl;
     // if statement for the first index
-    cout << "current Node = " << currentNode << endl;
+    //cout << "current Node = " << currentNode << endl;
     if(currentNode != 0){
     // calculate adjacent
         for(auto x: openSet){
-          cout << " Current Node : and X :"
-          << currentNode << " " << x << endl;;
+          //cout << " In open : " << x << endl;
+          //cout << " Current Node : and X :"
+          //<< currentNode << " " << x << endl;;
           int fCost = hValue(elements,dj,x) + gValue(elements,currentNode,x);
-          cout << " Fcost :" << fCost<< endl;
-          if(fCost < currentNode){
+          cout << " Fcost : " << fCost<<" X Node : "
+          << x <<endl;
+          cout << "Previous F cost "<< previousFcost << endl;         
+          if(fCost < previousFcost && vContains(x, closedSet) == 0 ){
             currentNode = x;
+            previousFcost = fCost;
           }
         }        
-    }
-
+    } 
+    
+    path.push_back(currentNode);
+    
     openSet.erase(openSet.begin()+0);
     closedSet.push_back(currentNode);
+
+    
     for(auto x: dj[currentNode]){
       if(vContains(x, closedSet) == 1)continue;
       //if(vContains(x,openSet)==0)
       openSet.push_back(x); 
+    }   
+
+
+
+  }
+
+  int steps =0;
+  for(int i=0;i < path.size()-1;i++){
+    //cout << path[i] << " -> " << path[i+1] << endl;
+    //cout << path[i] << " -> " << path[i+1] << endl;
+    if(gValue(elements,path[i],path[i+1]) == 1){
+      steps += gValue(elements,path[i],path[i+1]);
+      cout << path[i] << " -> " << path[i+1] << endl;
+      cout << " Change color to:" << elements[path[i+1]] << endl;
     }
   }
+  // Needs to be divided by 2 as it repeats the first half again
+  cout << " THESE ARE THE STEPS " << steps << endl;
 }
-
-
-
-
-
 
 
 
@@ -193,11 +211,14 @@ void changeColor(vector<int> dj[], int elements[],int color){
   int prevColor = elements[0];
   elementsToChange = adj(0,elementsToChange,dj,elements,prevColor);
   for (int i =0 ; i < elementsToChange.size();i++){
-    cout << " THIS IS " <<elementsToChange[i] << endl;
+    //cout << " THIS IS " <<elementsToChange[i] << endl;
     elements[elementsToChange[i]] = color ;
   }  
   elements[0] = color;
 }
+
+
+
 
 
 int checkWinner(int elements[],int N){
@@ -325,7 +346,12 @@ int main() {
   /*    change color
              */
   cout << "Start of chnage color " << endl;
-  /*
+  
+   
+
+
+  pathFind(matr,elementList);
+
   int finished = 0;
   while (finished != 1){
     int color;
@@ -336,10 +362,6 @@ int main() {
     printGraph(elementList,listLength,rows);
     finished = checkWinner(elementList,listLength);
   }
-  */
-
-
-  pathFind(matr,elementList);
 
 
 
