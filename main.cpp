@@ -6,6 +6,10 @@
 
 using namespace std;
 
+
+
+
+
 // node and next node
 void addEdge(vector<int> adj[], int u, int v) 
 {   
@@ -97,7 +101,7 @@ vector<int> adj(int cur,vector<int> elChange,vector<int> dj[],int elements[],int
      if(elements[x] != elements[cur]){
        cout << " THIS IS inCORRECT x :" << x << endl;
        elChange.push_back(cur);       
-     } else if(elements[x] == elements[cur] && x > cur /*&& elements[x] == color*/){
+     } else if(elements[x] == elements[cur] && x > cur && contained == false){
        cout << " //////THIS IS correct x :" << x << endl;
        elChange.push_back(x); 
        elChange = adj(x,elChange,dj,elements,color);      
@@ -110,6 +114,80 @@ vector<int> adj(int cur,vector<int> elChange,vector<int> dj[],int elements[],int
    return elChange ;
 }
 
+
+int gValue(int elements[],int current , int adj){
+  if (elements[current] == elements[adj]){
+    return 0;
+  } else if (elements[current] != elements[adj]){
+    return 1;
+  }
+}
+
+int hValue(int elements[],vector<int> dj[],int adj){
+    int counter = 0;
+    for(auto x:dj[adj]){      
+      if(elements[x] == elements[adj]){        
+        counter -=1;
+      } else if(elements[x]!= elements[adj]){
+  
+        counter +=1;
+      }
+    }
+    return counter;
+}
+
+int vContains(int num , vector<int> numbers){
+  if (std::find(numbers.begin(), numbers.end(), num) != numbers.end())
+    // Contains
+		return 1;
+	else
+    // Dosent contain
+		return 0;
+}
+
+
+void pathFind(vector<int> dj[],int elements[]){
+  vector<int> openSet;
+  vector<int> closedSet;
+  vector<int> path;
+  openSet.push_back(0);
+  while (openSet.size() > 0){
+     //cout << "First element in openSet " << openSet[0] << endl;
+    int currentNode = openSet[0];
+    //cout << " This is current Node :" << currentNode << endl;
+    // if statement for the first index
+    cout << "current Node = " << currentNode << endl;
+    if(currentNode != 0){
+    // calculate adjacent
+        for(auto x: openSet){
+          cout << " Current Node : and X :"
+          << currentNode << " " << x << endl;;
+          int fCost = hValue(elements,dj,x) + gValue(elements,currentNode,x);
+          cout << " Fcost :" << fCost<< endl;
+          if(fCost < currentNode){
+            currentNode = x;
+          }
+        }        
+    }
+
+    openSet.erase(openSet.begin()+0);
+    closedSet.push_back(currentNode);
+    for(auto x: dj[currentNode]){
+      if(vContains(x, closedSet) == 1)continue;
+      //if(vContains(x,openSet)==0)
+      openSet.push_back(x); 
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
 void changeColor(vector<int> dj[], int elements[],int color){
   vector<int> elementsToChange;
   int prevColor = elements[0];
@@ -121,6 +199,22 @@ void changeColor(vector<int> dj[], int elements[],int color){
   elements[0] = color;
 }
 
+
+int checkWinner(int elements[],int N){
+  int counter = 0;
+  int color = elements[0];
+  for(int i =1;i < N ; i++){
+    if(elements[i] == color){
+      counter +=1;
+    }
+  }
+  if(counter == N-1){
+    cout << "\n **" <<"Well Done , You've won ! **";
+    return 1;
+  }else{
+    return 0;
+  }
+}
 
 /*
 void changeColor(vector<int> dj[], int elements[],int N,int color){
@@ -168,7 +262,8 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
           adjac[count + 1] = x;
           cout << " Value at adjac[count] : " << adjac[count + 1] << endl;
           count++;
-        }
+        }1
+
         
       }      
     }    
@@ -195,7 +290,7 @@ void changeColor(vector<int> dj[], int elements[],int N,int color){
 
 
 int main() { 
-  string fileNam = "test.txt";
+  string fileNam = "example.txt";
   /*  Making list of elements     */
   //opens file
   ifstream ufile(fileNam);
@@ -213,7 +308,7 @@ int main() {
 
   makeMatrix(matr,rows);
 
-  adjacent(matr,listLength);
+  //adjacent(matr,listLength);
   cout << endl;
 
   printGraph(elementList,listLength,rows);
@@ -230,47 +325,24 @@ int main() {
   /*    change color
              */
   cout << "Start of chnage color " << endl;
-
   /*
-  cout << "Start of new change color" << endl;
-  changeColor(matr,elementList,rows,2);
-  printGraph(elementList,listLength,rows);
-
-  cout << "Start of new change color" << endl;
-  changeColor(matr,elementList,rows,1);
-  printGraph(elementList,listLength,rows);
-
-  cout << "Start of new change color" << endl;
-  changeColor(matr,elementList,rows,2);
-  printGraph(elementList,listLength,rows);
-  */
-
-  /*
-  vector<int> elChange;
-
-  elChange = adj(0,elChange,matr,elementList);
-
-  cout << "THIS IS :"<< elChange.size() << " Size "<< endl;
-  cout << "THIS IS :"<< elChange[0] << endl;
-  cout << "THIS IS :"<< elChange[1] << endl;
-  cout << "THIS IS :"<< elChange[2] << endl;
-  cout << "THIS IS :"<< elChange[3] << endl;
-  cout << "THIS IS :"<< elChange[4] << endl;
-  cout << "THIS IS :"<< elChange[5] << endl;
-
-  for (int i = 0; i << 5; i++){
-    cout << "Value : " << elChange[i] << endl;
+  int finished = 0;
+  while (finished != 1){
+    int color;
+    cout << "Color to change to from 1-6: ";
+    //TODO add check for 1-6
+    cin >> color;
+    changeColor(matr, elementList,color);
+    printGraph(elementList,listLength,rows);
+    finished = checkWinner(elementList,listLength);
   }
   */
 
-  printGraph(elementList,listLength,rows);
-  cout << endl;
-  changeColor(matr, elementList,4);
-  printGraph(elementList,listLength,rows);
 
-  changeColor(matr, elementList,2);
-  printGraph(elementList,listLength,rows);
-  
+  pathFind(matr,elementList);
+
+
+
 
     return 0; 
 }
