@@ -125,6 +125,7 @@ int gValue(int elements[],int current , int adj){
 }
 
 
+/*
 int hValue(int elements[],vector<int> dj[],int adj){
     int counter = 0;
     for(auto x:dj[adj]){      
@@ -136,9 +137,10 @@ int hValue(int elements[],vector<int> dj[],int adj){
     }
     return counter;
 }
+*/
 
 
-/*
+
 int *goalState(int adj, int elements[]){
   int yo[25];
   for(int i =0; i < 25;i++){
@@ -147,12 +149,14 @@ int *goalState(int adj, int elements[]){
   return yo;
 }
 
+
 int hValue(int elements[],vector<int> dj,int adj){
 
   changeColor(dj, elements,elements[path[i+1]])
   
 }
-*/
+
+
 
 
 /* Checks if an element is in a vector list */
@@ -166,7 +170,7 @@ vector<int> pathFind(vector<int> dj[],int elements[]){
   while (openSet.size() > 0){
     
     int currentNode = openSet[0];
-   
+        /*
         for(auto x: openSet){
          
           int fCost = hValue(elements,dj,x) + gValue(elements,currentNode,x);
@@ -176,7 +180,11 @@ vector<int> pathFind(vector<int> dj[],int elements[]){
             currentNode = x;
             previousFcost = fCost;
           }
-        }  
+        }*/
+
+        for( int i =1;i<7;i++){
+          
+        }
     
    
     path.push_back(currentNode);
