@@ -1,4 +1,4 @@
-#include <iostream>
+  #include <iostream>
 #include <fstream>
 #include <string>
 #include<bits/stdc++.h> 
@@ -124,7 +124,7 @@ int gValue(int elements[],int current , int adj){
   }
 }
 
-/* Checks if the element is next to equal elements */
+
 int hValue(int elements[],vector<int> dj[],int adj){
     int counter = 0;
     for(auto x:dj[adj]){      
@@ -136,6 +136,23 @@ int hValue(int elements[],vector<int> dj[],int adj){
     }
     return counter;
 }
+
+
+/*
+int *goalState(int adj, int elements[]){
+  int yo[25];
+  for(int i =0; i < 25;i++){
+    yo[i] = yo[adj];
+  }
+  return yo;
+}
+
+int hValue(int elements[],vector<int> dj,int adj){
+
+  changeColor(dj, elements,elements[path[i+1]])
+  
+}
+*/
 
 
 /* Checks if an element is in a vector list */
@@ -193,8 +210,7 @@ vector<int> pathFind(vector<int> dj[],int elements[]){
   int steps =0;
   for(int i=0;i < path.size()-1;i++){
     
-    if(gValue(elements,path[i],path[i+1]) == 1 ){
-     
+    if(gValue(elements,path[i],path[i+1]) == 1 ){     
       finalPath.push_back(elements[path[i+1]]);
       changeColor(dj, elements,elements[path[i+1]]);
       steps += gValue(elements,path[i],path[i+1]);
