@@ -6,6 +6,8 @@
 
 using namespace std;
 
+typedef int grid[];
+
 /* Prints all the elements in a  vector*/
 void print(vector<int> printList){
   for(int i =0;i < printList.size();i++){
@@ -125,7 +127,7 @@ int gValue(int elements[],int current , int adj){
 }
 
 
-/*
+
 int hValue(int elements[],vector<int> dj[],int adj){
     int counter = 0;
     for(auto x:dj[adj]){      
@@ -137,10 +139,10 @@ int hValue(int elements[],vector<int> dj[],int adj){
     }
     return counter;
 }
-*/
 
 
 
+/*
 int *goalState(int adj, int elements[]){
   int yo[25];
   for(int i =0; i < 25;i++){
@@ -148,13 +150,24 @@ int *goalState(int adj, int elements[]){
   }
   return yo;
 }
+*/
 
-
+/*
 int hValue(int elements[],vector<int> dj,int adj){
 
   changeColor(dj, elements,elements[path[i+1]])
   
 }
+*/
+
+void ida_star(int elements[],vector<int> root[],int adj){
+  int bound = hValue(root);
+  grid path[];
+  path.push_back(root);
+
+}
+
+
 
 
 
@@ -205,9 +218,7 @@ vector<int> pathFind(vector<int> dj[],int elements[]){
         if(vContains(x, closedSet) == 1)continue;
         if(vContains(x,openSet)==1)continue;
         openSet.push_back(x); 
-      }
-    
-   
+      }  
 
 
 
