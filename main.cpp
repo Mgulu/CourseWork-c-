@@ -1,4 +1,4 @@
-  #include <iostream>
+#include <iostream>
 #include <fstream>
 #include <string>
 #include<bits/stdc++.h> 
@@ -12,41 +12,37 @@ class Node {
     int hvalue;
     int fvalue;     
     int *grid;  
-    Node(int gValeur, int hValeur,int fValeur,int elements[]) {
+    vector<int> values;
+    Node(int gValeur, int hValeur,int fValeur,int elements[],vector<int> path) {
       gValue = gValeur;
       hvalue = hValeur;
       fvalue = fValeur;
-      grid = elements;
-      
+      grid = elements;   
+      values = path;
     }
 };
 
-void deepCopy(int newElements[],int elements[],int elementsLength){
-  for(int i=0; i<elementsLength; ++i)
-    newElements[i] = elements[i];
-
-}
-
-/* Prints all the elements in a  vector*/
-void print(vector<int> printList){
-  for(int i =0;i < printList.size();i++){
-    cout << printList[i] << " ";
-  }
-  cout<< endl;
-}
+struct GreatestF {
+    bool operator()( const Node& lx, const Node& rx ) const {
+        return lx.fvalue < rx.fvalue;
+    }
+};
 
 
-/* Adds values to the array of vectors */
-void addEdge(vector<int> adj[], int x, int y) 
-{   
-    // Adds to the list in index x
-    adj[x].push_back(y); 
-    // Adds to the list in index y
+
+void addEdge(vector<int> adj[], int x, int y){       
+    adj[x].push_back(y);    
     adj[y].push_back(x); 
 } 
-  
 
-/* Makes the graph with all the connections between nodes */
+void deepCopy(int newElements[],int elements[],int elementsLength){
+  for(int i=0; i<elementsLength; ++i){
+    newElements[i] = elements[i];
+    }
+}
+
+
+
 void makeGraph(vector<int> dj[], int N){
   int listLength = N*N;
   for(int i = 0; i < listLength ;i++){
@@ -60,7 +56,9 @@ void makeGraph(vector<int> dj[], int N){
   }
 }
 
-/* Prints the elements in the list in grid format */
+
+
+
 void printGraph(int elementsList[],int lengthList,int rows){
   for(int i = 0;i <lengthList;i++){
       cout << elementsList[i];
@@ -70,47 +68,31 @@ void printGraph(int elementsList[],int lengthList,int rows){
     }
 }
 
-/* Opens and reads all the data from a file */
 void openFile(string fileName, int elements[]){
-  ifstream ufile(fileName);
+  ifstream myFile(fileName.c_str());
   int data;
-  // gets first element of list
-  ufile >> data; 
-  // N x N 
+  myFile >> data; 
   int N = data;
   cout << data << endl;
-  // Gets all the int's inside the txt
+ 
   for(int i = 0; i < N*N;i++){
-    ufile >> data; 
+    myFile >> data; 
     elements[i] = data;
   }
 }
 
 
-/* Checks if an element is in a vector list */
-int vContains(int num , vector<int> numbers){
-  if (std::find(numbers.begin(), numbers.end(), num) != numbers.end())
-    // Contains
-		return 1;
-	else
-    // Dosent contain
-		return 0;
-}
-
-/* Looks for all the adjacent elements that are the same
-    Starting from the pivot.
-    reutrns: elements to be changed */
 vector<int> adj(int cur,vector<int> elChange,vector<int> dj[],int elements[],int color){
    for(auto x:dj[cur]){
-     // Checks to see if the value exists inside elChange
+     
      bool contained = false;
-     if(std::find(elChange.begin(), elChange.end(), x) != elChange.end()) {
+     if(find(elChange.begin(), elChange.end(), x) != elChange.end()) {
       contained = true;
         }
-     // If the elements are not the same only push back the parent
+    
      if(elements[x] != elements[cur]){
        elChange.push_back(cur);       
-       // recursively calls adj for elements who have similar values
+      
      } else if(elements[x] == elements[cur] && x > cur && contained == false){
 
        elChange.push_back(x); 
@@ -124,7 +106,6 @@ vector<int> adj(int cur,vector<int> elChange,vector<int> dj[],int elements[],int
    return elChange ;
 }
 
-/* Procedure that changes the the color of elements in grid */
 void changeColor(vector<int> dj[], int elements[],int color){
   vector<int> elementsToChange;
   int prevColor = elements[0];
@@ -135,47 +116,6 @@ void changeColor(vector<int> dj[], int elements[],int color){
   elements[0] = color;
 }
 
-
-/* Checks if two elements are the same then returns a value */
-int gValue(int elements[],int current , int adj){
-  if (elements[current] == elements[adj]){
-    return 0;
-  } else {
-    return 1;
-  }
-}
-
-
-int hValue(int elements[],vector<int> dj[],int adj){
-    int counter = 0;
-    for(auto x:dj[adj]){      
-      if(elements[x] == elements[adj]){        
-        counter -=1;
-      } else if(elements[x]!= elements[adj]){  
-        counter +=1;
-      }
-    }
-    return counter;
-}
-
-
-/*
-int *goalState(int adj, int elements[]){
-  int yo[25];
-  for(int i =0; i < 25;i++){
-    yo[i] = yo[adj];
-  }
-  return yo;
-}
-
-int hValue(int elements[],vector<int> dj,int adj){
-
-  changeColor(dj, elements,elements[path[i+1]] )
-  
-}
-*/
-
-/* Checks if all the elements are the same */
 int checkWinner(int elements[],int N){
   int counter = 0;
   int color = elements[0];
@@ -192,38 +132,16 @@ int checkWinner(int elements[],int N){
   }
 }
 
-/* Checks if all the elements are the same */
-int missPlaced(int elements[],int N){
-  int counter = 0;
-  int color = elements[0];
-  for(int i =1;i < N ; i++){
-    if(elements[i] != color){
-      counter +=1;
-    }
-  }
-  return counter;
-}
 
-/*
-int missPlaced(int elements[],int N){
-  //int counter = 0;
-  //int color = elements[0];
-  std::unordered_set<int> colours;
+int hValue(int elements[],int N){  
+  unordered_set<int> color;
   for(int i =0;i < N ; i++){
-    if (colours.find(elements[i]) == colours.end()){
-        colours.insert(elements[i]);
+    if (color.find(elements[i]) == color.end()){
+        color.insert(elements[i]);
       } 
-  }
-  unordered_set<int> :: iterator itr;  
-    // iterator itr loops from begin() till end() 
-  for (itr = colours.begin(); itr != colours.end(); itr++) {
-      Fcout << *itr << " " << endl; 
-    } 
-  
-  return colours.size();
-}*/
-
-
+  }   
+  return color.size();
+} 
 
 bool isSame(int elements[],int nElements[],int elementsSize){
   for(int i=0;i < elementsSize;i ++){
@@ -234,312 +152,186 @@ bool isSame(int elements[],int nElements[],int elementsSize){
   return true;
 }
 
-int won(int elements[],int size){
-  int same[2] = {0,0};
-  int u = 0; 
-  for(int i =0;i < size ; i++){
-    if(elements[0] != elements[i]){
-      same[u] = elements[i];
-      u += 1;
-    }
-  }
-  if(same[0] != same[1]){
-    return 1;
-  } else if (same[0] == same[1]){
-    return 0;
-  }
-
-}
-
-
-void pathFind(vector<int> dj[],int elements[],int listSize,int rowSize){
+void pathFind(vector<int> matrix[],int elements[],int listSize,int rowSize){
   vector<Node> openSet;
   vector<Node> closedSet;
   vector<int> path;
-  Node rootNode(0,0,0,elements);
+  Node rootNode(0,0,0,elements,path);
   openSet.push_back(rootNode); 
   Node currentNode = openSet[0];
-  int loop = 0;
-  int currentUnique = missPlaced(elements,listSize);
-  int previousGrid[listSize];
-  while (openSet.size() > 0 ){
-    int lowestFcost = 100000;
+  bool flag = false;  
+  while (openSet.size() > 0 && flag == false){
     int index = 0;
     int counter = 0;
-    for(auto x: openSet){
-      if(x.fvalue < lowestFcost){
-        lowestFcost = x.fvalue;
-        currentNode = x;
-        index = counter;   
-      }
-      counter += 1;
-    }
-    
-   
-
-    loop +=1;
-    closedSet.push_back(currentNode);
-    //cout << " ClosedSet Size : " << closedSet.size() << endl;
-    cout << " LOOP :" << loop << endl;
-   // cout << " LowestFcost & CurrentGrid :" << lowestFcost << endl;  
-    printGraph(currentNode.grid,listSize,rowSize);
-    cout << endl;
-    
-    cout << endl;
-    cout << "Current Gvalue " << currentNode.gValue << endl;
-    cout << "Current Hvalue " << currentNode.hvalue << endl;
-    if(missPlaced(currentNode.grid,listSize) < 3){
-      int output = currentNode.gValue + won(currentNode.grid,listSize);
-      cout << "LOWEST AMOUNT OF MOVES :" << output  << endl;
+    Node currentNode = openSet[0];    
+    closedSet.push_back(currentNode);        
+    if(hValue(currentNode.grid,listSize) <= 2 ){
+      int output = currentNode.gValue ;
+      cout << "LOWEST AMOUNT OF MOVES :" << output + 1  << endl;
       cout << "WINNER WINNER CHICKEN DINNER " << endl;
-      exit(0);      
+      for(auto x: currentNode.values){
+        cout << x;
+      }
+      flag = true;    
+      continue;  
     } 
-
     
-
-    for(int i =1;i <10;i++){  
-      int * currentGrid;
-      currentGrid = new int [listSize];    
-      //int currentGrid[listSize];
-      //cout << currentGrid << endl;
-      deepCopy(currentGrid,currentNode.grid,listSize);       
-      //cout << endl;
-      changeColor(dj, currentGrid,i);
-      //cout << endl;
-      
-
+    for(int i = 1;i <10;i++){  
+      int *currentGrid = new int [listSize];           
+      deepCopy(currentGrid,currentNode.grid,listSize);             
+      changeColor(matrix, currentGrid,i);    
 
       bool openFlag = false;
+     
       for(auto x: openSet){
         if(isSame(x.grid,currentGrid,listSize) == true){
           openFlag = true;
           continue;
         }
-      }
-      
+      }      
       bool closedFlag = false;
+     
       for(auto x:closedSet){
-        if(isSame(currentGrid,x.grid,listSize) == true &&
-          x.gValue > currentNode.gValue +1){
-            x.gValue = currentNode.gValue + 1;
-            closedFlag = true;
-            //cout << " IN HERE " << endl;
-            //printGraph(currentGrid,listSize,rowSize);
-            //cout << " IN HERE " << endl;
+        if(isSame(currentGrid,x.grid,listSize) == true){
+            closedFlag = true;          
             continue;
           }
-        else if(isSame(currentGrid,x.grid,listSize) == true &&
-          x.gValue < currentNode.gValue +1 ){
-            closedFlag = true;
-            //cout << " Outchea " << endl;
-            //printGraph(currentGrid,listSize,rowSize);
-            //cout << " Outchea " << endl;
-            continue;
-          }
-        
-        if (openFlag == false && closedFlag == false){
-          int hValue = missPlaced(currentGrid,listSize);
-          int gValue = currentNode.gValue +1 ;
-          int fValue = hValue + gValue;
-          Node childNode(gValue,hValue,fValue,currentGrid);
-          openSet.push_back(childNode);   
-          //cout << " Added To Openset " << endl;         
-          //printGraph(currentGrid,listSize,rowSize);  
-          //cout << " hValye " << childNode.hvalue << endl;
-          //cout << " Added To Openset " << endl;
-          }
-
-      }     
-
-    }
-  
-  vector<int> inOpen;
-  int indexN = 0;
-  for(auto x: openSet){
-    if(isSame(currentNode.grid,x.grid,listSize)){
-      inOpen.push_back(indexN);
-    }
-    indexN +=1;
-  }
-
-  for(auto x:inOpen){
-    openSet.erase(openSet.begin() + x);
-  }
-  cout << endl;
-
-  
-  cout << " OpenSet Size : " << openSet.size() << endl;
-  
-  }
-
-
-
-}
-
-
-/* Checks if an element is in a vector list 
-vector<int> pathFind(vector<int> dj[],int elements[]){
-  vector<int> openSet;
-  vector<int> closedSet;
-  vector<int> path;
-  vector<int> finalPath;
-  openSet.push_back(0);
-  int previousFcost = 1000;  
-  while (openSet.size() > 0){
+      }        
     
-    int currentNode = openSet[0];
-   
-        for(auto x: openSet){
+      if (openFlag == false && closedFlag == false){
+        int hvalue = hValue(currentGrid,listSize);
+        int gValue = currentNode.gValue + 1;
+        int fValue = hvalue + gValue;
+        Node childNode(gValue,hvalue,fValue,currentGrid,currentNode.values);
+        (childNode.values).push_back(i);
+        openSet.push_back(childNode);                     
+        }else{
          
-          int fCost = hValue(elements,dj,x) + gValue(elements,currentNode,x);
-          //cout << " Fcost : " << fCost<<" X Node : "
-          //<< x <<endl;       
-          if(fCost < previousFcost ){
-            currentNode = x;
-            previousFcost = fCost;
-          }
-        }  
-    
-   
-    path.push_back(currentNode);
+          delete[] currentGrid; 
+        }
+    }    
 
-    
-    openSet.erase(openSet.begin()+0);
-    closedSet.push_back(currentNode);
+  openSet.erase(openSet.begin());
+  sort (openSet.begin(), openSet.end(),GreatestF());
+  }  
 
-    
-    for(auto x: dj[currentNode]){
-      if(vContains(x, closedSet) == 1)continue;
-      if(vContains(x,openSet)==1)continue;
-      openSet.push_back(x); 
-    }   
-
-    
-    for(auto x: openSet){     
-        if(vContains(x, closedSet) == 1)continue;
-        if(vContains(x,openSet)==1)continue;
-        openSet.push_back(x); 
-      }
-  }
-  
-  int steps =0;
-  for(int i=0;i < path.size()-1;i++){
-    
-    if(gValue(elements,path[i],path[i+1]) == 1 ){     
-      finalPath.push_back(elements[path[i+1]]);
-      changeColor(dj, elements,elements[path[i+1]]);
-      steps += gValue(elements,path[i],path[i+1]);
-      
-    }
-  }
-  
-  return finalPath;
+  for(auto x:openSet){
+    delete[] x.grid;
+  } 
 }
-*/
 
 
-
-
-
-
-
-
-
-/* Makes a random grid  */
 void generateGame(int listSize, int elementList[]){
   for (int i =0; i < listSize; i++){
           int ran = rand() % 6 + 1;
           elementList[i] = ran;
-          //cout << gen[i] << endl;
+          
           }
-
 }
-
 
 int main() { 
   char choice;
-  cout << "WELCOME , file or generate grid ? F/G" << endl;
-  cin >> choice;
-  int rows;
+  
+  int rows = 0;
   int listLength;
   string fileNam;
-  if(choice == 'F'){    
-    cout << "Enter file name : ";
-    cin >> fileNam;
-    ifstream ufile(fileNam);
-    ufile >> rows ;
-    listLength = rows*rows;
-    ufile.close();
-    
+  bool choiceFlag = false;
+  while (choiceFlag == false){
+    cout << "WELCOME , file or generate grid ? F/G" << endl;
+    cin >> choice;
+    if(choice == 'F' || choice == 'f'){   
+      bool fileExists = false; 
+      do{
+        cout << "Enter file name : ";
+        cin >> fileNam;
+        ifstream myFile(fileNam.c_str());
+        if(!myFile.fail() == true){
+          fileExists = true;
+          myFile >> rows ;
+          listLength = rows*rows;      
+          myFile.close(); 
+        } else{
+          
+            cin.clear();
+            
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cout << "Invalid File" << endl;
+        }
+      } while(!fileExists);
 
-  } else if ( choice == 'G'){
-    cout << "Enter how many rows? : ";
-     cin >> rows ;
-    listLength = rows*rows;
-    
+      
+      choiceFlag = true;
 
+    } else if ( choice == 'G' || choice == 'g'){       
+      bool rowsFlag = false;
+      do {
+        cout << "Enter how many rows? (3-9) : ";
+        cin >> rows;
+        if(cin.good() && rows > 2 && rows <10 ){
+          rowsFlag = true;
+        } else {
+          
+            cin.clear();
+            
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cout << "Needs to be a number between 3 - 9" << endl;
+        }
+
+      } while(!rowsFlag);
+                  
+      listLength = rows*rows;     
+      choiceFlag = true;   
+    }
   }
 
   int elementList[listLength];
   int tempList[listLength];
 
-
-
-  
-  if(choice == 'F'){
+  if(choice == 'F' || choice == 'f'){
     openFile(fileNam,elementList);
-  } else if(choice == 'G'){
+  } else if(choice == 'G' || choice == 'g'){
     generateGame(listLength, elementList);
   }
-  
-  
-  /* deep copy 
-  int deepCopy[listLength];
-  memcpy(deepCopy,elementList,listLength);
-  cout << elementList <<  endl;
-  */
-  
-  
-  
-  /*   Making graph       */
+   
+
   
   vector<int> matr[listLength];
   makeGraph(matr,rows);
-
-
   cout << endl;
 
-  
-  for(int i=0; i<listLength; ++i)
-        tempList[i] = elementList[i];
+  deepCopy(tempList,elementList,listLength);  
   
   
   printGraph(tempList,listLength,rows);  
   
-  
-  pathFind(matr,tempList,listLength,rows);
+ 
 
-  /*
-  int finished = 0;
+  
+  int finished = 0; 
   while (finished != 1){
-    int color;
-    cout << "Color to change to from 1-6: ";
-    //TODO add check for 1-6
-    cin >> color;
+    bool colorFlag = false;
+    int color =0;  
+    do {
+        cout << "Enter Color (1-9) : ";
+        cin >> color;
+        if(cin.good() && color >0 && color < 10 ){
+          colorFlag = true;
+        } else {          
+            cin.clear();            
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cout << "Needs to be a number between 1 - 9" << endl;
+        }
+      } while(!colorFlag);    
     changeColor(matr, elementList,color);
     printGraph(elementList,listLength,rows);
+    cout << endl;    
     if(color == 0){
       finished = 1;
     } else{
     finished = checkWinner(elementList,listLength);
     }
   }
-  cout << " Minimum moves to finish was " << bestPath.size()<<endl;
-  cout<< "These were the best moves :";
-  print(bestPath);
-  */
+  pathFind(matr,tempList,listLength,rows);  
 
-
-
-    return 0; 
+  return 0; 
 }
